@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn Hindi Letters</title>
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f7f7fb;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 32px;
+    }
+
+    h2 {
+      margin-top: 32px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+    }
+
+    button.letter {
+      font-size: 34px;
+      padding: 18px 8px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      transition: transform 0.1s ease, background 0.1s ease;
+    }
+
+    button.letter:hover {
+      background: #eef3ff;
+      transform: scale(1.04);
+    }
+
+    .roman {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    .note {
+      margin-top: 32px;
+      padding: 12px;
+      background: #fff8d8;
+      border-radius: 8px;
+      color: #5b4a00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Learn Hindi Letters</h1>
+  <p class="subtitle">Click a letter to hear its pronunciation</p>
+
+  <h2>Vowels — स्वर</h2>
+  <div id="vowels" class="grid"></div>
+
+  <h2>Consonants — व्यंजन</h2>
+  <div id="consonants" class="grid"></div>
+
+  <div class="note">
+    Note: Pronunciation depends on whether your browser/device has a Hindi voice installed.
+    Chrome and Edge usually work well.
+  </div>
+
+  <script>
+    const vowels = [
+      { letter: "अ", roman: "a" },
+      { letter: "आ", roman: "aa" },
+      { letter: "इ", roman: "i" },
+      { letter: "ई", roman: "ee" },
+      { letter: "उ", roman: "u" },
+      { letter: "ऊ", roman: "oo" },
+      { letter: "ऋ", roman: "ri" },
+      { letter: "ए", roman: "e" },
+      { letter: "ऐ", roman: "ai" },
+      { letter: "ओ", roman: "o" },
+      { letter: "औ", roman: "au" },
+      { letter: "अं", roman: "am" },
+      { letter: "अः", roman: "ah" }
+    ];
+
+    const consonants = [
+      { letter: "क", roman: "ka" },
+      { letter: "ख", roman: "kha" },
+      { letter: "ग", roman: "ga" },
+      { letter: "घ", roman: "gha" },
+      { letter: "ङ", roman: "nga" },
+
+      { letter: "च", roman: "cha" },
+      { letter: "छ", roman: "chha" },
+      { letter: "ज", roman: "ja" },
+      { letter: "झ", roman: "jha" },
+      { letter: "ञ", roman: "nya" },
+
+      { letter: "ट", roman: "ta" },
+      { letter: "ठ", roman: "tha" },
+      { letter: "ड", roman: "da" },
+      { letter: "ढ", roman: "dha" },
+      { letter: "ण", roman: "na" },
+
+      { letter: "त", roman: "ta" },
+      { letter: "थ", roman: "tha" },
+      { letter: "द", roman: "da" },
+      { letter: "ध", roman: "dha" },
+      { letter: "न", roman: "na" },
+
+      { letter: "प", roman: "pa" },
+      { letter: "फ", roman: "pha" },
+      { letter: "ब", roman: "ba" },
+      { letter: "भ", roman: "bha" },
+      { letter: "म", roman: "ma" },
+
+      { letter: "य", roman: "ya" },
+      { letter: "र", roman: "ra" },
+      { letter: "ल", roman: "la" },
+      { letter: "व", roman: "va" },
+
+      { letter: "श", roman: "sha" },
+      { letter: "ष", roman: "sha" },
+      { letter: "स", roman: "sa" },
+      { letter: "ह", roman: "ha" },
+
+      { letter: "क्ष", roman: "ksha" },
+      { letter: "त्र", roman: "tra" },
+      { letter: "ज्ञ", roman: "gya" }
+    ];
+
+    function speakHindi(text) {
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "hi-IN";
+      utterance.rate = 0.75;
+      utterance.pitch = 1;
+
+      const voices = window.speechSynthesis.getVoices();
+      const hindiVoice = voices.find(v => v.lang === "hi-IN" || v.lang.startsWith("hi"));
+
+      if (hindiVoice) {
+        utterance.voice = hindiVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function renderLetters(containerId, letters) {
+      const container = document.getElementById(containerId);
+
+      letters.forEach(item => {
+        const button = document.createElement("button");
+        button.className = "letter";
+        button.innerHTML = `${item.letter}<span class="roman">${item.roman}</span>`;
+        button.onclick = () => speakHindi(item.letter);
+        container.appendChild(button);
+      });
+    }
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.getVoices();
+    };
+
+    renderLetters("vowels", vowels);
+    renderLetters("consonants", consonants);
+  </script>
+</body>
+</html>
